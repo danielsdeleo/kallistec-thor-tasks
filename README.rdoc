@@ -1,0 +1,34 @@
+= Kallistec's Thor Tasks
+Just a generator like Rails' or Merb's but for regular projects. Creates:
+
+RSPEC:
+* spec/unit/
+* spec/spec.opts
+* spec/spec_helper.rb
+
+CUKES:
+* features/
+* features/steps/
+
+LIB
+* lib/$project_name.rb
+* lib/$project_name/
+
+RAKE
+* Rakefile
+
+README
+* README.rdoc
+
+Also does a <tt>git init</tt> and <tt>git add .</tt> and  <tt>git commit -a -m "initial"</tt>
+
+= Use freely
+There are probably many like it, but this one is mine. Feel free to use, borrow, or steal from it.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
