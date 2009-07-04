@@ -6,6 +6,15 @@ require "rubygems"
 require "thor"
 
 module ProjectGenerator
+  
+  ::String.class_eval do
+    def classify
+      split("_").map { |w| w.capitalize }.join("")
+    end
+  end
+  
+  MAGIG_UTF8 = "# encoding: UTF-8"
+  
   RAKEFILE=<<RAKE
 # encoding: UTF-8
 require "spec/rake/spectask"
@@ -69,20 +78,23 @@ MOCHA
   
   def lib_root_file(fh, name)
     log("creating ``root'' library file")
-    fh.puts "# encoding: UTF-8"
-    fh.puts name.upcase + "_ROOT" + " = File.dirname(__FILE__) + '/'"
+    fh.puts MAGIG_UTF8
+    fh.puts "unless defined?(#{project_root_const})"
+    fh.puts "  " + project_root_const + " = File.dirname(__FILE__) + '/'"
+    fh.puts "end"
+    fh.puts
   end
   
   def spec_helper(fh, name)
     log("generating spec/spec_helper.rb")
-    fh.puts "# encoding: UTF-8"
+    fh.puts MAGIG_UTF8
     fh.puts "require 'rubygems'"
     fh.puts
     fh.puts "require File.dirname(__FILE__) + '/../lib/#{name}.rb'"
     fh.puts 
     fh.puts MOCK_WITH_MOCHA
     fh.puts
-    fh.puts "include #{name.capitalize}"
+    fh.puts "include #{name.classify}"
     fh.puts
   end
   
@@ -104,6 +116,38 @@ MOCHA
       @logger.level = Logger::DEBUG
     end
     @logger.debug(msg)
+  end
+  
+  def spec_stub(fh, name)
+    fh.puts MAGIG_UTF8
+    fh.puts "require File.dirname(__FILE__) + \"/../spec_helper\""
+    fh.puts
+    fh.puts "describe #{name.classify} do"
+    fh.puts
+    fh.puts "end"
+  end
+  
+  def project_name
+     Dir.glob("lib/*.rb").first.split("/").last.sub(/\.rb$/, '')
+  end
+  
+  def class_stub(fh, name)
+    fh.puts MAGIG_UTF8
+    fh.puts
+    fh.puts "module #{project_name.classify}"
+    fh.puts "  class #{name.classify}"
+    fh.puts "    "
+    fh.puts "  end"
+    fh.puts "end"
+  end
+  
+  def project_root_const
+    project_name.upcase + "_ROOT"
+  end
+  
+  def add_require(fh, name)
+    log("updating project initializer to load lib/#{project_name}/#{name}.rb")
+    fh.puts "require #{project_root_const} + \"/#{project_name}/#{name}\""
   end
   
   class SimpleLogs < Logger::Formatter
@@ -153,6 +197,26 @@ class Gen < Thor
     touch("README.rdoc")
     git_initial_commit
     log("created project #{name} in #{File.expand_path("~/ruby/" + name)}")
+  end
+  
+  def class(name)
+    spec_file = "spec/unit/#{name}_spec.rb"
+    lib_file = "lib/#{project_name}/#{name}.rb"
+    if File.exist?(spec_file) || File.exist?(lib_file)
+      puts "[FAILED] one or both of #{spec_file}, #{lib_file} exists."
+      exit 127
+    end
+    log("creating stub class file in #{spec_file}")
+    File.open(spec_file, "w+") do |f|
+      spec_stub(f, name)
+    end
+    log("creating stub class file in #{lib_file}")
+    File.open(lib_file, "w+") do |f|
+      class_stub(f, name)
+    end
+    File.open("lib/#{project_name}.rb", "a+") do |f|
+      add_require(f, name)
+    end
   end
   
 end
