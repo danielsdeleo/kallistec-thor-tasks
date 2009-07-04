@@ -1,23 +1,23 @@
 = Kallistec's Thor Tasks
 Just a generator like Rails' or Merb's but for regular projects. Creates:
 
-RSPEC:
+==RSPEC:
 * spec/unit/
 * spec/spec.opts
 * spec/spec_helper.rb
 
-CUKES:
+==CUKES:
 * features/
 * features/steps/
 
-LIB
+==LIB
 * lib/$project_name.rb
 * lib/$project_name/
 
-RAKE
+==RAKE
 * Rakefile
 
-README
+==README
 * README.rdoc
 
 Also does a <tt>git init</tt> and <tt>git add .</tt> and  <tt>git commit -a -m "initial"</tt>
