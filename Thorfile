@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require "fileutils"
 require "logger"
 require "rubygems"
@@ -5,6 +7,7 @@ require "thor"
 
 module ProjectGenerator
   RAKEFILE=<<RAKE
+# encoding: UTF-8
 require "spec/rake/spectask"
 require "cucumber"
 require "cucumber/rake/task"
@@ -40,6 +43,7 @@ namespace :spec do
 
 end
 RAKE
+
 MOCK_WITH_MOCHA=<<MOCHA
 Spec::Runner.configure do |config|
   config.mock_with :mocha
@@ -65,11 +69,13 @@ MOCHA
   
   def lib_root_file(fh, name)
     log("creating ``root'' library file")
+    fh.puts "# encoding: UTF-8"
     fh.puts name.upcase + "_ROOT" + " = File.dirname(__FILE__) + '/'"
   end
   
   def spec_helper(fh, name)
     log("generating spec/spec_helper.rb")
+    fh.puts "# encoding: UTF-8"
     fh.puts "require 'rubygems'"
     fh.puts
     fh.puts "require File.dirname(__FILE__) + '/../lib/#{name}.rb'"
