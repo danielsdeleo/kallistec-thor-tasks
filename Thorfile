@@ -161,6 +161,16 @@ MOCHA
     fh.puts "end"
   end
   
+  def module_stub(fh, name)
+    fh.puts MAGIG_UTF8
+    fh.puts
+    fh.puts "module #{project_name.classify}"
+    fh.puts "  module #{name.classify}"
+    fh.puts "    "
+    fh.puts "  end"
+    fh.puts "end"
+  end
+  
   def project_root_const
     project_name.upcase + "_ROOT"
   end
@@ -168,6 +178,14 @@ MOCHA
   def add_require(fh, name)
     log("updating project initializer to load lib/#{project_name}/#{name}.rb")
     fh.puts "require #{project_root_const} + \"#{project_name}/#{name}\""
+  end
+  
+  def spec_and_lib_for(name)
+    spec_file = "spec/unit/#{name}_spec.rb"
+    lib_file = "lib/#{project_name}/#{name}.rb"
+    fail_if_exists(spec_file, "Rspec file")
+    fail_if_exists(lib_file, "Library file")
+    return [spec_file, lib_file]
   end
   
   class SimpleLogs < Logger::Formatter
@@ -209,16 +227,26 @@ class Gen < Thor
   end
   
   def class(name)
-    spec_file = "spec/unit/#{name}_spec.rb"
-    lib_file = "lib/#{project_name}/#{name}.rb"
-    fail_if_exists(spec_file, "Rspec file")
-    fail_if_exists(lib_file, "Library file")
+    spec_file, lib_file = spec_and_lib_for(name)
+    #spec_file = "spec/unit/#{name}_spec.rb"
+    #lib_file = "lib/#{project_name}/#{name}.rb"
+    #fail_if_exists(spec_file, "Rspec file")
+    #fail_if_exists(lib_file, "Library file")
     
-    log("creating stub class file in #{spec_file}")
+    log("creating stub spec file in #{spec_file}")
     generate(spec_file) { |f| spec_stub(f, name)}
     log("creating stub class file in #{lib_file}")
     generate(lib_file){ |f| class_stub(f, name)}
     append("lib/#{project_name}.rb") { |f| add_require(f, name)}
+  end
+  
+  def mod(name)
+    spec_file, lib_file = spec_and_lib_for(name)
+    log("creating stub spec file in #{spec_file}")
+    generate(spec_file) { |f| spec_stub(f, name) }
+    log("creating stub module file in #{lib_file}")
+    generate(lib_file) { |f| module_stub(f, name) }
+    append("lib/#{project_name}.rb") { |f| add_require(f, name) }
   end
   
 end
