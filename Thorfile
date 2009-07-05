@@ -135,7 +135,7 @@ MOCHA
       @logger.formatter = SimpleLogs.new
       @logger.level = Logger::DEBUG
     end
-    @logger.debug(msg)
+    @logger.info(msg)
   end
   
   def spec_stub(fh, name)
