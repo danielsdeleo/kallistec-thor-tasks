@@ -226,6 +226,7 @@ class Gen < Thor
     log("created project #{name} in #{File.expand_path("~/ruby/" + name)}")
   end
   
+  desc "class", "creates a new class stub w/ rspec file"
   def class(name)
     spec_file, lib_file = spec_and_lib_for(name)
     #spec_file = "spec/unit/#{name}_spec.rb"
@@ -240,6 +241,7 @@ class Gen < Thor
     append("lib/#{project_name}.rb") { |f| add_require(f, name)}
   end
   
+  desc "mod", "creates a new module stub w/ rspec file"
   def mod(name)
     spec_file, lib_file = spec_and_lib_for(name)
     log("creating stub spec file in #{spec_file}")
