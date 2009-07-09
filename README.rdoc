@@ -23,7 +23,8 @@ Just a generator like Rails' or Merb's but for regular projects. Creates:
 Also does a <tt>git init</tt> and <tt>git add .</tt> and  <tt>git commit -a -m "initial"</tt>
 
 = Use freely
-There are probably many like it, but this one is mine. Feel free to use, borrow, or steal from it.
+There are probably many like it, but this one is mine. Feel free to use, borrow, or steal from it. If you want something similar, but with more features, rails support, and not so customized to my personal environment, have a look at Beet:
+http://jackdempsey.github.com/beet/
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
